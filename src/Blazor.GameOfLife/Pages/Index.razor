@@ -1,0 +1,28 @@
+﻿@page "/"
+
+@using Blazor.GameOfLife.Components
+@using Blazor.GameOfLife.Models
+
+@inject IJSRuntime _jsRuntime
+
+@code
+{
+    public int PixelWidth { get; set; }
+    public int PixelHeight { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var size = await _jsRuntime.InvokeAsync<WindowSize>("getWindowSize");
+            PixelWidth = Math.Min(size.Width, size.Height);
+            PixelHeight = Math.Min(size.Width, size.Height);
+            StateHasChanged();
+        }
+    }
+}
+
+<GameOfLife Rows="50"
+            Columns="50"
+            PixelWidth="@PixelWidth"
+            PixelHeight="@PixelHeight" />
